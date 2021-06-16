@@ -3,6 +3,7 @@ package com.mindcoder.jblog.controller.admin;
 import com.mindcoder.jblog.entity.AdminUser;
 import com.mindcoder.jblog.service.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,12 +11,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-/**
- * @author 13
- * @qq交流群 796794009
- * @email 2449207463@qq.com
- * @link http://13blog.site
- */
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -40,13 +36,13 @@ public class AdminController {
     }
 
     @GetMapping({"", "/", "/index", "/index.html"})
-    public String index(HttpServletRequest request) {
-        request.setAttribute("path", "index");
-        request.setAttribute("categoryCount", categoryService.getTotalCategories());
-        request.setAttribute("blogCount", blogService.getTotalBlogs());
-        request.setAttribute("linkCount", linkService.getTotalLinks());
-        request.setAttribute("tagCount", tagService.getTotalTags());
-        request.setAttribute("commentCount", commentService.getTotalComments());
+    public String index(Model model) {
+        model.addAttribute("path", "index");
+        model.addAttribute("categoryCount", categoryService.getTotalCategories());
+        model.addAttribute("blogCount", blogService.getTotalBlogs());
+        model.addAttribute("linkCount", linkService.getTotalLinks());
+        model.addAttribute("tagCount", tagService.getTotalTags());
+        model.addAttribute("commentCount", commentService.getTotalComments());
         return "admin/index";
     }
 
@@ -82,31 +78,31 @@ public class AdminController {
     }
 
     @GetMapping("/profile")
-    public String profile(HttpServletRequest request) {
-        Integer loginUserId = (int) request.getSession().getAttribute("loginUserId");
+    public String profile(Model model,HttpSession session) {
+        Integer loginUserId = (int) session.getAttribute("loginUserId");
         AdminUser adminUser = adminUserService.getUserDetailById(loginUserId);
         if (adminUser == null) {
             return "admin/login";
         }
-        request.setAttribute("path", "profile");
-        request.setAttribute("loginUserName", adminUser.getLoginUserName());
-        request.setAttribute("nickName", adminUser.getNickName());
+        model.addAttribute("path", "profile");
+        model.addAttribute("loginUserName", adminUser.getLoginUserName());
+        model.addAttribute("nickName", adminUser.getNickName());
         return "admin/profile";
     }
 
     @PostMapping("/profile/password")
     @ResponseBody
-    public String passwordUpdate(HttpServletRequest request, @RequestParam("originalPassword") String originalPassword,
+    public String passwordUpdate(HttpSession session, @RequestParam("originalPassword") String originalPassword,
                                  @RequestParam("newPassword") String newPassword) {
         if (StringUtils.isEmpty(originalPassword) || StringUtils.isEmpty(newPassword)) {
             return "参数不能为空";
         }
-        Integer loginUserId = (int) request.getSession().getAttribute("loginUserId");
+        Integer loginUserId = (int) session.getAttribute("loginUserId");
         if (adminUserService.updatePassword(loginUserId, originalPassword, newPassword)) {
             //修改成功后清空session中的数据，前端控制跳转至登录页
-            request.getSession().removeAttribute("loginUserId");
-            request.getSession().removeAttribute("loginUser");
-            request.getSession().removeAttribute("errorMsg");
+            session.removeAttribute("loginUserId");
+            session.removeAttribute("loginUser");
+            session.removeAttribute("errorMsg");
             return "success";
         } else {
             return "修改失败";
@@ -115,12 +111,12 @@ public class AdminController {
 
     @PostMapping("/profile/name")
     @ResponseBody
-    public String nameUpdate(HttpServletRequest request, @RequestParam("loginUserName") String loginUserName,
+    public String nameUpdate(HttpSession session, @RequestParam("loginUserName") String loginUserName,
                              @RequestParam("nickName") String nickName) {
         if (StringUtils.isEmpty(loginUserName) || StringUtils.isEmpty(nickName)) {
             return "参数不能为空";
         }
-        Integer loginUserId = (int) request.getSession().getAttribute("loginUserId");
+        Integer loginUserId = (int) session.getAttribute("loginUserId");
         if (adminUserService.updateName(loginUserId, loginUserName, nickName)) {
             return "success";
         } else {
@@ -129,10 +125,8 @@ public class AdminController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
-        request.getSession().removeAttribute("loginUserId");
-        request.getSession().removeAttribute("loginUser");
-        request.getSession().removeAttribute("errorMsg");
+    public String logout(HttpSession session) {
+        session.invalidate();
         return "admin/login";
     }
 }

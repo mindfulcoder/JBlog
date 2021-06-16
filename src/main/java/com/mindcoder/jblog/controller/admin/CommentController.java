@@ -76,8 +76,8 @@ public class CommentController {
     }
 
     @GetMapping("/comments")
-    public String list(HttpServletRequest request) {
-        request.setAttribute("path", "comments");
+    public String list(Model model) {
+        model.addAttribute("path", "comments");
         return "admin/comment";
     }
 

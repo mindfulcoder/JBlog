@@ -46,7 +46,7 @@ public class MyBlogController {
      * @return
      */
     @GetMapping({"/", "/index", "index.html"})
-    public String index(HttpServletRequest request) {
+    public String index(Model model) {
         return this.page(request, 1);
     }
 
@@ -56,17 +56,17 @@ public class MyBlogController {
      * @return
      */
     @GetMapping({"/page/{pageNum}"})
-    public String page(HttpServletRequest request, @PathVariable("pageNum") int pageNum) {
+    public String page(Model model, @PathVariable("pageNum") int pageNum) {
         PageResult blogPageResult = blogService.getBlogsForIndexPage(pageNum);
         if (blogPageResult == null) {
             return "error/error_404";
         }
-        request.setAttribute("blogPageResult", blogPageResult);
-        request.setAttribute("newBlogs", blogService.getBlogListForIndexPage(1));
-        request.setAttribute("hotBlogs", blogService.getBlogListForIndexPage(0));
-        request.setAttribute("hotTags", tagService.getBlogTagCountForIndex());
-        request.setAttribute("pageName", "首页");
-        request.setAttribute("configurations", configService.getAllConfigs());
+        model.addAttribute("blogPageResult", blogPageResult);
+        model.addAttribute("newBlogs", blogService.getBlogListForIndexPage(1));
+        model.addAttribute("hotBlogs", blogService.getBlogListForIndexPage(0));
+        model.addAttribute("hotTags", tagService.getBlogTagCountForIndex());
+        model.addAttribute("pageName", "首页");
+        model.addAttribute("configurations", configService.getAllConfigs());
         return "blog/" + theme + "/index";
     }
 
@@ -76,11 +76,11 @@ public class MyBlogController {
      * @return
      */
     @GetMapping({"/categories"})
-    public String categories(HttpServletRequest request) {
-        request.setAttribute("hotTags", tagService.getBlogTagCountForIndex());
-        request.setAttribute("categories", categoryService.getAllCategories());
-        request.setAttribute("pageName", "分类页面");
-        request.setAttribute("configurations", configService.getAllConfigs());
+    public String categories(Model model) {
+        model.addAttribute("hotTags", tagService.getBlogTagCountForIndex());
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("pageName", "分类页面");
+        model.addAttribute("configurations", configService.getAllConfigs());
         return "blog/" + theme + "/category";
     }
 
@@ -90,14 +90,14 @@ public class MyBlogController {
      * @return
      */
     @GetMapping({"/blog/{blogId}", "/article/{blogId}"})
-    public String detail(HttpServletRequest request, @PathVariable("blogId") Long blogId, @RequestParam(value = "commentPage", required = false, defaultValue = "1") Integer commentPage) {
+    public String detail(Model model, @PathVariable("blogId") Long blogId, @RequestParam(value = "commentPage", required = false, defaultValue = "1") Integer commentPage) {
         BlogDetailVO blogDetailVO = blogService.getBlogDetail(blogId);
         if (blogDetailVO != null) {
-            request.setAttribute("blogDetailVO", blogDetailVO);
-            request.setAttribute("commentPageResult", commentService.getCommentPageByBlogIdAndPageNum(blogId, commentPage));
+            model.addAttribute("blogDetailVO", blogDetailVO);
+            model.addAttribute("commentPageResult", commentService.getCommentPageByBlogIdAndPageNum(blogId, commentPage));
         }
-        request.setAttribute("pageName", "详情");
-        request.setAttribute("configurations", configService.getAllConfigs());
+        model.addAttribute("pageName", "详情");
+        model.addAttribute("configurations", configService.getAllConfigs());
         return "blog/" + theme + "/detail";
     }
 
@@ -107,7 +107,7 @@ public class MyBlogController {
      * @return
      */
     @GetMapping({"/tag/{tagName}"})
-    public String tag(HttpServletRequest request, @PathVariable("tagName") String tagName) {
+    public String tag(Model model, @PathVariable("tagName") String tagName) {
         return tag(request, tagName, 1);
     }
 
@@ -117,16 +117,16 @@ public class MyBlogController {
      * @return
      */
     @GetMapping({"/tag/{tagName}/{page}"})
-    public String tag(HttpServletRequest request, @PathVariable("tagName") String tagName, @PathVariable("page") Integer page) {
+    public String tag(Model model, @PathVariable("tagName") String tagName, @PathVariable("page") Integer page) {
         PageResult blogPageResult = blogService.getBlogsPageByTag(tagName, page);
-        request.setAttribute("blogPageResult", blogPageResult);
-        request.setAttribute("pageName", "标签");
-        request.setAttribute("pageUrl", "tag");
-        request.setAttribute("keyword", tagName);
-        request.setAttribute("newBlogs", blogService.getBlogListForIndexPage(1));
-        request.setAttribute("hotBlogs", blogService.getBlogListForIndexPage(0));
-        request.setAttribute("hotTags", tagService.getBlogTagCountForIndex());
-        request.setAttribute("configurations", configService.getAllConfigs());
+        model.addAttribute("blogPageResult", blogPageResult);
+        model.addAttribute("pageName", "标签");
+        model.addAttribute("pageUrl", "tag");
+        model.addAttribute("keyword", tagName);
+        model.addAttribute("newBlogs", blogService.getBlogListForIndexPage(1));
+        model.addAttribute("hotBlogs", blogService.getBlogListForIndexPage(0));
+        model.addAttribute("hotTags", tagService.getBlogTagCountForIndex());
+        model.addAttribute("configurations", configService.getAllConfigs());
         return "blog/" + theme + "/list";
     }
 
@@ -136,7 +136,7 @@ public class MyBlogController {
      * @return
      */
     @GetMapping({"/category/{categoryName}"})
-    public String category(HttpServletRequest request, @PathVariable("categoryName") String categoryName) {
+    public String category(Model model, @PathVariable("categoryName") String categoryName) {
         return category(request, categoryName, 1);
     }
 
@@ -146,16 +146,16 @@ public class MyBlogController {
      * @return
      */
     @GetMapping({"/category/{categoryName}/{page}"})
-    public String category(HttpServletRequest request, @PathVariable("categoryName") String categoryName, @PathVariable("page") Integer page) {
+    public String category(Model model, @PathVariable("categoryName") String categoryName, @PathVariable("page") Integer page) {
         PageResult blogPageResult = blogService.getBlogsPageByCategory(categoryName, page);
-        request.setAttribute("blogPageResult", blogPageResult);
-        request.setAttribute("pageName", "分类");
-        request.setAttribute("pageUrl", "category");
-        request.setAttribute("keyword", categoryName);
-        request.setAttribute("newBlogs", blogService.getBlogListForIndexPage(1));
-        request.setAttribute("hotBlogs", blogService.getBlogListForIndexPage(0));
-        request.setAttribute("hotTags", tagService.getBlogTagCountForIndex());
-        request.setAttribute("configurations", configService.getAllConfigs());
+        model.addAttribute("blogPageResult", blogPageResult);
+        model.addAttribute("pageName", "分类");
+        model.addAttribute("pageUrl", "category");
+        model.addAttribute("keyword", categoryName);
+        model.addAttribute("newBlogs", blogService.getBlogListForIndexPage(1));
+        model.addAttribute("hotBlogs", blogService.getBlogListForIndexPage(0));
+        model.addAttribute("hotTags", tagService.getBlogTagCountForIndex());
+        model.addAttribute("configurations", configService.getAllConfigs());
         return "blog/" + theme + "/list";
     }
 
@@ -165,7 +165,7 @@ public class MyBlogController {
      * @return
      */
     @GetMapping({"/search/{keyword}"})
-    public String search(HttpServletRequest request, @PathVariable("keyword") String keyword) {
+    public String search(Model model, @PathVariable("keyword") String keyword) {
         return search(request, keyword, 1);
     }
 
@@ -175,16 +175,16 @@ public class MyBlogController {
      * @return
      */
     @GetMapping({"/search/{keyword}/{page}"})
-    public String search(HttpServletRequest request, @PathVariable("keyword") String keyword, @PathVariable("page") Integer page) {
+    public String search(Model model, @PathVariable("keyword") String keyword, @PathVariable("page") Integer page) {
         PageResult blogPageResult = blogService.getBlogsPageBySearch(keyword, page);
-        request.setAttribute("blogPageResult", blogPageResult);
-        request.setAttribute("pageName", "搜索");
-        request.setAttribute("pageUrl", "search");
-        request.setAttribute("keyword", keyword);
-        request.setAttribute("newBlogs", blogService.getBlogListForIndexPage(1));
-        request.setAttribute("hotBlogs", blogService.getBlogListForIndexPage(0));
-        request.setAttribute("hotTags", tagService.getBlogTagCountForIndex());
-        request.setAttribute("configurations", configService.getAllConfigs());
+        model.addAttribute("blogPageResult", blogPageResult);
+        model.addAttribute("pageName", "搜索");
+        model.addAttribute("pageUrl", "search");
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("newBlogs", blogService.getBlogListForIndexPage(1));
+        model.addAttribute("hotBlogs", blogService.getBlogListForIndexPage(0));
+        model.addAttribute("hotTags", tagService.getBlogTagCountForIndex());
+        model.addAttribute("configurations", configService.getAllConfigs());
         return "blog/" + theme + "/list";
     }
 
@@ -195,22 +195,22 @@ public class MyBlogController {
      * @return
      */
     @GetMapping({"/link"})
-    public String link(HttpServletRequest request) {
-        request.setAttribute("pageName", "友情链接");
+    public String link(Model model) {
+        model.addAttribute("pageName", "友情链接");
         Map<Byte, List<BlogLink>> linkMap = linkService.getLinksForLinkPage();
         if (linkMap != null) {
             //判断友链类别并封装数据 0-友链 1-推荐 2-个人网站
             if (linkMap.containsKey((byte) 0)) {
-                request.setAttribute("favoriteLinks", linkMap.get((byte) 0));
+                model.addAttribute("favoriteLinks", linkMap.get((byte) 0));
             }
             if (linkMap.containsKey((byte) 1)) {
-                request.setAttribute("recommendLinks", linkMap.get((byte) 1));
+                model.addAttribute("recommendLinks", linkMap.get((byte) 1));
             }
             if (linkMap.containsKey((byte) 2)) {
-                request.setAttribute("personalLinks", linkMap.get((byte) 2));
+                model.addAttribute("personalLinks", linkMap.get((byte) 2));
             }
         }
-        request.setAttribute("configurations", configService.getAllConfigs());
+        model.addAttribute("configurations", configService.getAllConfigs());
         return "blog/" + theme + "/link";
     }
 
@@ -219,7 +219,7 @@ public class MyBlogController {
      */
     @PostMapping(value = "/blog/comment")
     @ResponseBody
-    public Result comment(HttpServletRequest request, HttpSession session,
+    public Result comment(Model model, HttpSession session,
                           @RequestParam Long blogId, @RequestParam String verifyCode,
                           @RequestParam String commentator, @RequestParam String email,
                           @RequestParam String websiteUrl, @RequestParam String commentBody) {
@@ -272,12 +272,12 @@ public class MyBlogController {
      * @return
      */
     @GetMapping({"/{subUrl}"})
-    public String detail(HttpServletRequest request, @PathVariable("subUrl") String subUrl) {
+    public String detail(Model model, @PathVariable("subUrl") String subUrl) {
         BlogDetailVO blogDetailVO = blogService.getBlogDetailBySubUrl(subUrl);
         if (blogDetailVO != null) {
-            request.setAttribute("blogDetailVO", blogDetailVO);
-            request.setAttribute("pageName", subUrl);
-            request.setAttribute("configurations", configService.getAllConfigs());
+            model.addAttribute("blogDetailVO", blogDetailVO);
+            model.addAttribute("pageName", subUrl);
+            model.addAttribute("configurations", configService.getAllConfigs());
             return "blog/" + theme + "/detail";
         } else {
             return "error/error_400";

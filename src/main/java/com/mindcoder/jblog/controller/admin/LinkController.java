@@ -27,8 +27,8 @@ public class LinkController {
     private LinkService linkService;
 
     @GetMapping("/links")
-    public String linkPage(HttpServletRequest request) {
-        request.setAttribute("path", "links");
+    public String linkPage(Model model) {
+        model.addAttribute("path", "links");
         return "admin/link";
     }
 

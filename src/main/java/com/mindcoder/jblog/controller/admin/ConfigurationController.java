@@ -24,9 +24,9 @@ public class ConfigurationController {
     private ConfigService configService;
 
     @GetMapping("/configurations")
-    public String list(HttpServletRequest request) {
-        request.setAttribute("path", "configurations");
-        request.setAttribute("configurations", configService.getAllConfigs());
+    public String list(Model model) {
+        model.addAttribute("path", "configurations");
+        model.addAttribute("configurations", configService.getAllConfigs());
         return "admin/configuration";
     }
 

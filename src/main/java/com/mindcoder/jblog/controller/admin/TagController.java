@@ -26,8 +26,8 @@ public class TagController {
     private TagService tagService;
 
     @GetMapping("/tags")
-    public String tagPage(HttpServletRequest request) {
-        request.setAttribute("path", "tags");
+    public String tagPage(Model model) {
+        model.addAttribute("path", "tags");
         return "admin/tag";
     }
 

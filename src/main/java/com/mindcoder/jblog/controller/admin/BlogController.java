@@ -9,6 +9,7 @@ import com.mindcoder.jblog.util.PageQueryUtil;
 import com.mindcoder.jblog.util.Result;
 import com.mindcoder.jblog.util.ResultGenerator;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,12 +27,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 
-/**
- * @author 13
- * @qq交流群 796794009
- * @email 2449207463@qq.com
- * @link http://13blog.site
- */
 @Controller
 @RequestMapping("/admin")
 public class BlogController {
@@ -53,27 +48,27 @@ public class BlogController {
 
 
     @GetMapping("/blogs")
-    public String list(HttpServletRequest request) {
-        request.setAttribute("path", "blogs");
+    public String list(Model model) {
+        model.addAttribute("path", "blogs");
         return "admin/blog";
     }
 
     @GetMapping("/blogs/edit")
-    public String edit(HttpServletRequest request) {
-        request.setAttribute("path", "edit");
-        request.setAttribute("categories", categoryService.getAllCategories());
+    public String edit(Model model) {
+        model.addAttribute("path", "edit");
+        model.addAttribute("categories", categoryService.getAllCategories());
         return "admin/edit";
     }
 
     @GetMapping("/blogs/edit/{blogId}")
-    public String edit(HttpServletRequest request, @PathVariable("blogId") Long blogId) {
-        request.setAttribute("path", "edit");
+    public String edit(Model model, @PathVariable("blogId") Long blogId) {
+        model.addAttribute("path", "edit");
         Blog blog = blogService.getBlogById(blogId);
         if (blog == null) {
             return "error/error_400";
         }
-        request.setAttribute("blog", blog);
-        request.setAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("blog", blog);
+        model.addAttribute("categories", categoryService.getAllCategories());
         return "admin/edit";
     }
 
@@ -182,7 +177,7 @@ public class BlogController {
     }
 
     @PostMapping("/blogs/md/uploadfile")
-    public void uploadFileByEditormd(HttpServletRequest request,
+    public void uploadFileByEditormd(Model model,
                                      HttpServletResponse response,
                                      @RequestParam(name = "editormd-image-file", required = true)
                                              MultipartFile file) throws IOException, URISyntaxException {
