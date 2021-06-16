@@ -1,8 +1,6 @@
 package com.yoolean.jblog.controller.admin;
 
 import com.yoolean.jblog.entity.AdminUser;
-import com.mindcoder.jblog.service.*;
-import com.mindfulcoder.jblog.service.*;
 import com.yoolean.jblog.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

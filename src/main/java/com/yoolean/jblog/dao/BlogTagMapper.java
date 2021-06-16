@@ -3,9 +3,10 @@ package com.yoolean.jblog.dao;
 import com.yoolean.jblog.entity.BlogTag;
 import com.yoolean.jblog.entity.BlogTagCount;
 import com.yoolean.jblog.util.PageQueryUtil;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-
+@Mapper
 public interface BlogTagMapper {
     int deleteByPrimaryKey(Integer tagId);
 

@@ -2,9 +2,10 @@ package com.yoolean.jblog.dao;
 
 import com.yoolean.jblog.entity.BlogLink;
 import com.yoolean.jblog.util.PageQueryUtil;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-
+@Mapper
 public interface BlogLinkMapper {
     int deleteByPrimaryKey(Integer linkId);
 

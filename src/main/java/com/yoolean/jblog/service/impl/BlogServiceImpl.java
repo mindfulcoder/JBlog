@@ -3,8 +3,6 @@ package com.yoolean.jblog.service.impl;
 import com.yoolean.jblog.controller.vo.BlogDetailVO;
 import com.yoolean.jblog.controller.vo.BlogListVO;
 import com.yoolean.jblog.controller.vo.SimpleBlogListVO;
-import com.mindcoder.jblog.dao.*;
-import com.mindfulcoder.jblog.dao.*;
 import com.yoolean.jblog.dao.*;
 import com.yoolean.jblog.entity.Blog;
 import com.yoolean.jblog.entity.BlogCategory;

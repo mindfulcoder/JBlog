@@ -1,10 +1,11 @@
 package com.yoolean.jblog.dao;
 
 import com.yoolean.jblog.entity.BlogComment;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 import java.util.Map;
-
+@Mapper
 public interface BlogCommentMapper {
     int deleteByPrimaryKey(Long commentId);
 

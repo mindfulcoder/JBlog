@@ -8,5 +8,15 @@
         <result column="nick_name" jdbcType="INTEGER" property="nickName"/>
         <result column="locked" jdbcType="TINYINT" property="locked"/>
     </resultMap>
+    <insert id="insert" parameterType="com.yoolean.jblog.entity.AdminUser" useGeneratedKeys="true"
+            keyProperty="adminUserId">
+        insert into tb_admin_user(admin_user_id, login_user_name, login_password, nick_name, locked)
+        values (#{adminUserId}, #{loginUserName}, #{loginPassword}, #{nickName}, #{locked});
+    </insert>
+    <insert id="insertSelective"></insert>
+    <update id="updateByPrimaryKeySelective"></update>
+    <update id="updateByPrimaryKey"></update>
+    <select id="login" resultType="com.yoolean.jblog.entity.AdminUser"></select>
+    <select id="selectByPrimaryKey" resultType="com.yoolean.jblog.entity.AdminUser"></select>
 
 </mapper>

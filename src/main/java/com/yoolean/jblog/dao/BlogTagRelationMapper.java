@@ -1,10 +1,11 @@
 package com.yoolean.jblog.dao;
 
 import com.yoolean.jblog.entity.BlogTagRelation;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-
+@Mapper
 public interface BlogTagRelationMapper {
     int deleteByPrimaryKey(Long relationId);
 

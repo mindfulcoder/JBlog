@@ -2,10 +2,12 @@ package com.yoolean.jblog.dao;
 
 import com.yoolean.jblog.entity.BlogCategory;
 import com.yoolean.jblog.util.PageQueryUtil;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+@Mapper
 public interface BlogCategoryMapper {
     int deleteByPrimaryKey(Integer categoryId);
 
