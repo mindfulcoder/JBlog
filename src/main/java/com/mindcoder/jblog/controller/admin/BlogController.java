@@ -177,7 +177,7 @@ public class BlogController {
     }
 
     @PostMapping("/blogs/md/uploadfile")
-    public void uploadFileByEditormd(Model model,
+    public void uploadFileByEditormd(HttpServletRequest request,
                                      HttpServletResponse response,
                                      @RequestParam(name = "editormd-image-file", required = true)
                                              MultipartFile file) throws IOException, URISyntaxException {

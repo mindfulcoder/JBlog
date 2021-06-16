@@ -36,7 +36,7 @@ public class ErrorPageController implements ErrorController {
     }
 
     @RequestMapping(value = ERROR_PATH, produces = "text/html")
-    public ModelAndView errorHtml(Model model) {
+    public ModelAndView errorHtml(HttpServletRequest request) {
         HttpStatus status = getStatus(request);
         if (HttpStatus.BAD_REQUEST == status) {
             return new ModelAndView("error/error_400");
@@ -49,7 +49,7 @@ public class ErrorPageController implements ErrorController {
 
     @RequestMapping(value = ERROR_PATH)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> error(Model model) {
+    public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
         Map<String, Object> body = getErrorAttributes(request, getTraceParameter(request));
         HttpStatus status = getStatus(request);
         return new ResponseEntity<Map<String, Object>>(body, status);
@@ -61,7 +61,7 @@ public class ErrorPageController implements ErrorController {
     }
 
 
-    private boolean getTraceParameter(Model model) {
+    private boolean getTraceParameter(HttpServletRequest request) {
         String parameter = request.getParameter("trace");
         if (parameter == null) {
             return false;
@@ -69,12 +69,12 @@ public class ErrorPageController implements ErrorController {
         return !"false".equals(parameter.toLowerCase());
     }
 
-    protected Map<String, Object> getErrorAttributes(Model model, boolean includeStackTrace) {
+    protected Map<String, Object> getErrorAttributes(HttpServletRequest request, boolean includeStackTrace) {
         WebRequest webRequest = new ServletWebRequest(request);
         return this.errorAttributes.getErrorAttributes(webRequest, includeStackTrace);
     }
 
-    private HttpStatus getStatus(Model model) {
+    private HttpStatus getStatus(HttpServletRequest request) {
         Integer statusCode = (Integer) request
                 .getAttribute("javax.servlet.error.status_code");
         if (statusCode != null) {

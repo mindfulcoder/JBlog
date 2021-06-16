@@ -6,6 +6,7 @@ import com.mindcoder.jblog.entity.BlogLink;
 import com.mindcoder.jblog.service.*;
 import com.mindcoder.jblog.util.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,7 +48,7 @@ public class MyBlogController {
      */
     @GetMapping({"/", "/index", "index.html"})
     public String index(Model model) {
-        return this.page(request, 1);
+        return this.page(model, 1);
     }
 
     /**
@@ -108,7 +109,7 @@ public class MyBlogController {
      */
     @GetMapping({"/tag/{tagName}"})
     public String tag(Model model, @PathVariable("tagName") String tagName) {
-        return tag(request, tagName, 1);
+        return tag(model, tagName, 1);
     }
 
     /**
@@ -137,7 +138,7 @@ public class MyBlogController {
      */
     @GetMapping({"/category/{categoryName}"})
     public String category(Model model, @PathVariable("categoryName") String categoryName) {
-        return category(request, categoryName, 1);
+        return category(model, categoryName, 1);
     }
 
     /**
@@ -166,7 +167,7 @@ public class MyBlogController {
      */
     @GetMapping({"/search/{keyword}"})
     public String search(Model model, @PathVariable("keyword") String keyword) {
-        return search(request, keyword, 1);
+        return search(model, keyword, 1);
     }
 
     /**
@@ -219,7 +220,7 @@ public class MyBlogController {
      */
     @PostMapping(value = "/blog/comment")
     @ResponseBody
-    public Result comment(Model model, HttpSession session,
+    public Result comment(HttpServletRequest request, HttpSession session,
                           @RequestParam Long blogId, @RequestParam String verifyCode,
                           @RequestParam String commentator, @RequestParam String email,
                           @RequestParam String websiteUrl, @RequestParam String commentBody) {

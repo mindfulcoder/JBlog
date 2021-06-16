@@ -5,11 +5,11 @@ import com.mindcoder.jblog.util.PageQueryUtil;
 import com.mindcoder.jblog.util.Result;
 import com.mindcoder.jblog.util.ResultGenerator;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**

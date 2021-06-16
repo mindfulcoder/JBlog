@@ -4,18 +4,12 @@ import com.mindcoder.jblog.service.ConfigService;
 import com.mindcoder.jblog.util.Result;
 import com.mindcoder.jblog.util.ResultGenerator;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
-/**
- * @author 13
- * @qq交流群 796794009
- * @email 2449207463@qq.com
- * @link http://13blog.site
- */
 @Controller
 @RequestMapping("/admin")
 public class ConfigurationController {
