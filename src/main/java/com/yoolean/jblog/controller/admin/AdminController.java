@@ -1,19 +1,25 @@
 package com.yoolean.jblog.controller.admin;
 
-import com.yoolean.jblog.entity.AdminUser;
+import com.yoolean.jblog.entity.UserDetail;
 import com.yoolean.jblog.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.security.auth.Subject;
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
 
     @Resource
     private AdminUserService adminUserService;
@@ -34,7 +40,7 @@ public class AdminController {
         return "admin/login";
     }
 
-    @GetMapping({"", "/", "/index", "/index.html"})
+    @RequestMapping(value = {"", "/", "/index", "/index.html"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String index(Model model) {
         model.addAttribute("path", "index");
         model.addAttribute("categoryCount", categoryService.getTotalCategories());
@@ -45,87 +51,44 @@ public class AdminController {
         return "admin/index";
     }
 
-    @PostMapping(value = "/login")
-    public String login(@RequestParam("userName") String userName,
-                        @RequestParam("password") String password,
-                        @RequestParam("verifyCode") String verifyCode,
-                        HttpSession session) {
-        if (StringUtils.isEmpty(verifyCode)) {
-            session.setAttribute("errorMsg", "验证码不能为空");
-            return "admin/login";
-        }
-        if (StringUtils.isEmpty(userName) || StringUtils.isEmpty(password)) {
-            session.setAttribute("errorMsg", "用户名或密码不能为空");
-            return "admin/login";
-        }
-        String kaptchaCode = session.getAttribute("verifyCode") + "";
-        if (StringUtils.isEmpty(kaptchaCode) || !verifyCode.equals(kaptchaCode)) {
-            session.setAttribute("errorMsg", "验证码错误");
-            return "admin/login";
-        }
-        AdminUser adminUser = adminUserService.login(userName, password);
-        if (adminUser != null) {
-            session.setAttribute("loginUser", adminUser.getNickName());
-            session.setAttribute("loginUserId", adminUser.getAdminUserId());
-            //session过期时间设置为7200秒 即两小时
-            //session.setMaxInactiveInterval(60 * 60 * 2);
-            return "redirect:/admin/index";
-        } else {
-            session.setAttribute("errorMsg", "登陆失败");
-            return "admin/login";
-        }
-    }
-
     @GetMapping("/profile")
-    public String profile(Model model,HttpSession session) {
-        Integer loginUserId = (int) session.getAttribute("loginUserId");
-        AdminUser adminUser = adminUserService.getUserDetailById(loginUserId);
-        if (adminUser == null) {
+    public String profile(Model model, Principal principal) {
+        UserDetail userDetail = adminUserService.findUserDetail(principal.getName());
+        if (userDetail == null) {
             return "admin/login";
         }
         model.addAttribute("path", "profile");
-        model.addAttribute("loginUserName", adminUser.getLoginUserName());
-        model.addAttribute("nickName", adminUser.getNickName());
+        model.addAttribute("userDetail", userDetail);
         return "admin/profile";
     }
 
     @PostMapping("/profile/password")
     @ResponseBody
-    public String passwordUpdate(HttpSession session, @RequestParam("originalPassword") String originalPassword,
+    public String updatePassword(Principal principal, HttpSession session, @RequestParam("oldPassword") String oldPassword,
                                  @RequestParam("newPassword") String newPassword) {
-        if (StringUtils.isEmpty(originalPassword) || StringUtils.isEmpty(newPassword)) {
-            return "参数不能为空";
-        }
-        Integer loginUserId = (int) session.getAttribute("loginUserId");
-        if (adminUserService.updatePassword(loginUserId, originalPassword, newPassword)) {
-            //修改成功后清空session中的数据，前端控制跳转至登录页
-            session.removeAttribute("loginUserId");
-            session.removeAttribute("loginUser");
-            session.removeAttribute("errorMsg");
+        try {
+            if (StringUtils.isEmpty(oldPassword) || StringUtils.isEmpty(newPassword)) {
+                return "参数不能为空";
+            }
+            adminUserService.updatePassword(principal.getName(), oldPassword, newPassword);
+            session.invalidate();
             return "success";
-        } else {
-            return "修改失败";
+        } catch (Exception e) {
+            LOGGER.error("Failed to update password", e);
+            return "failure";
         }
     }
 
-    @PostMapping("/profile/name")
+    @PostMapping("/profile/detail")
     @ResponseBody
-    public String nameUpdate(HttpSession session, @RequestParam("loginUserName") String loginUserName,
-                             @RequestParam("nickName") String nickName) {
-        if (StringUtils.isEmpty(loginUserName) || StringUtils.isEmpty(nickName)) {
-            return "参数不能为空";
-        }
-        Integer loginUserId = (int) session.getAttribute("loginUserId");
-        if (adminUserService.updateName(loginUserId, loginUserName, nickName)) {
+    public String updateDetail( UserDetail userDetail) {
+        try {
+            adminUserService.updateUserDetail(userDetail);
             return "success";
-        } else {
-            return "修改失败";
+        } catch (Exception e) {
+            LOGGER.error("Fail to update user detail", e);
+            return "failure";
         }
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "admin/login";
-    }
 }

@@ -1,6 +1,5 @@
 DROP TABLE IF EXISTS `generator_test`;
 DROP TABLE IF EXISTS `jdbc_test`;
-DROP TABLE IF EXISTS `tb_admin_user`;
 DROP TABLE IF EXISTS `tb_blog`;
 DROP TABLE IF EXISTS `tb_blog_category`;
 DROP TABLE IF EXISTS `tb_blog_comment`;
@@ -23,15 +22,6 @@ CREATE TABLE `jdbc_test`
     `name` varchar(100) DEFAULT NULL COMMENT '名称'
 );
 
-CREATE TABLE `tb_admin_user`
-(
-    `admin_user_id`   int(11) NOT NULL AUTO_INCREMENT COMMENT '管理员id',
-    `login_user_name` varchar(50) NOT NULL COMMENT '管理员登陆名称',
-    `login_password`  varchar(50) NOT NULL COMMENT '管理员登陆密码',
-    `nick_name`       varchar(50) NOT NULL COMMENT '管理员显示昵称',
-    `locked`          tinyint(4) DEFAULT '0' COMMENT '是否锁定 0未锁定 1已锁定无法登陆',
-    PRIMARY KEY (`admin_user_id`)
-);
 
 CREATE TABLE `tb_blog`
 (
@@ -125,4 +115,31 @@ CREATE TABLE `tb_test`
     `id`        bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
     `test_info` varchar(50) NOT NULL COMMENT '测试内容',
     PRIMARY KEY (`id`)
+);
+
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS authorities;
+create table users
+(
+    username varchar_ignorecase(50) not null primary key,
+    password varchar_ignorecase(500) not null,
+    enabled  boolean not null
+);
+create table authorities
+(
+    username  varchar_ignorecase(50) not null,
+    authority varchar_ignorecase(50) not null,
+    constraint fk_authorities_users foreign key (username) references users (username)
+);
+create
+unique index ix_auth_username on authorities (username,authority);
+
+DROP TABLE IF EXISTS user_detail;
+CREATE TABLE user_detail
+(
+    username  varchar     NOT NULL COMMENT '用户名',
+    nick_name varchar(100) NOT NULL COMMENT '昵称',
+    email varchar(100)  COMMENT '邮件',
+    phone varchar(100)  COMMENT '电话',
+    PRIMARY KEY (username)
 );

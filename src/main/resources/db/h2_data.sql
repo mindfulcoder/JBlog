@@ -3,8 +3,6 @@ insert  into `jdbc_test`(`type`,`name`) values ('org.apache.commons.dbcp2.BasicD
 insert  into `jdbc_test`(`type`,`name`) values ('test','测试类');
 insert  into `jdbc_test`(`type`,`name`) values ('类别2','测试类2');
 
-insert  into `tb_admin_user`(`admin_user_id`,`login_user_name`,`login_password`,`nick_name`,`locked`) values (1,'admin','e10adc3949ba59abbe56e057f20f883e','十三',0);
-
 insert  into `tb_blog`(`blog_id`,`blog_title`,`blog_sub_url`,`blog_cover_image`,`blog_content`,`blog_category_id`,`blog_category_name`,`blog_tags`,`blog_status`,`blog_views`,`enable_comment`,`is_deleted`,`create_time`,`update_time`) values (1,'我是十三','about','/admin/dist/img/rand/33.jpg','## About me\n\n我是一名Java开发者，技术一般，经历平平，但是也一直渴望进步，同时也努力活着，为了人生不留遗憾，也希望能够一直做着自己喜欢的事情，得闲时分享心得、分享一些浅薄的经验，等以后老得不能再老了，就说故事已经讲完了,不去奢求圆满。',20,'About','世界上有一个很可爱的人,现在这个人就在看这句话',1,219,0,0,'2017-03-12 00:31:15','2018-11-12 00:31:15');
 
 insert  into `tb_blog_category`(`category_id`,`category_name`,`category_icon`,`category_rank`,`is_deleted`,`create_time`) values (20,'About','/admin/dist/img/category/10.png',8,0,'2018-11-12 00:28:49');
@@ -74,3 +72,5 @@ insert  into `tb_link`(`link_id`,`link_type`,`link_name`,`link_url`,`link_descri
 insert  into `tb_link`(`link_id`,`link_type`,`link_name`,`link_url`,`link_description`,`link_rank`,`is_deleted`,`create_time`) values (19,2,'《玩转Spring Boot 系列》','https://www.shiyanlou.com/courses/1274','SpringBoot实战课程',20,0,'2019-04-24 16:10:30');
 
 insert  into `tb_test`(`id`,`test_info`) values (1,'SpringBoot-MyBatis测试');
+
+insert into user_detail(username, nick_name, email, phone) values ('admin', 'admin', '', '');

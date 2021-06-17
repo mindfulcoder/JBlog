@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="error" monitorInterval="60">
+  <Appenders>
+    <Console name="console" target="SYSTEM_OUT">
+      <PatternLayout>
+        <pattern>%d{ISO8601}|%level|%thread|%c|%L|%msg%n</pattern>
+      </PatternLayout>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <Root level="INFO">
+      <AppenderRef ref="console"/>
+    </Root>
+    <Logger name="org.mybatis" level="INFO" additivity="false">
+      <AppenderRef ref="console"/>
+    </Logger>
+    <Logger name="org.springframework" level="INFO" additivity="false">
+      <AppenderRef ref="console"/>
+    </Logger>
+    <Logger name="org.springframework.security" level="INFO" additivity="false">
+      <AppenderRef ref="console"/>
+    </Logger>
+    <Logger name="org.springframework.web" level="INFO" additivity="false">
+      <AppenderRef ref="console"/>
+    </Logger>
+    <Logger name="com.yoolean.jblog" level="DEBUG" additivity="false">
+      <AppenderRef ref="console"/>
+    </Logger>
+  </Loggers>
+</Configuration>

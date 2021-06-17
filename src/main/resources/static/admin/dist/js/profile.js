@@ -1,15 +1,13 @@
 $(function () {
     //修改个人信息
-    $('#updateUserNameButton').click(function () {
-        $("#updateUserNameButton").attr("disabled",true);
-        var userName = $('#loginUserName').val();
+    $('#updateUserDetailButton').click(function () {
+        $("#updateUserDetailButton").attr("disabled",true);
         var nickName = $('#nickName').val();
-        if (validUserNameForUpdate(userName, nickName)) {
-            //ajax提交数据
-            var params = $("#userNameForm").serialize();
+        if (validNickNameForUpdate(nickName)) {
+            var params = $("#userDetailForm").serialize();
             $.ajax({
                 type: "POST",
-                url: "/admin/profile/name",
+                url: "/admin/profile/detail",
                 data: params,
                 success: function (r) {
                     if (r == 'success') {
@@ -27,9 +25,9 @@ $(function () {
     //修改密码
     $('#updatePasswordButton').click(function () {
         $("#updatePasswordButton").attr("disabled",true);
-        var originalPassword = $('#originalPassword').val();
+        var oldPassword = $('#oldPassword').val();
         var newPassword = $('#newPassword').val();
-        if (validPasswordForUpdate(originalPassword, newPassword)) {
+        if (validPasswordForUpdate(oldPassword, newPassword)) {
             var params = $("#userPasswordForm").serialize();
             $.ajax({
                 type: "POST",
@@ -55,20 +53,10 @@ $(function () {
 /**
  * 名称验证
  */
-function validUserNameForUpdate(userName, nickName) {
-    if (isNull(userName) || userName.trim().length < 1) {
-        $('#updateUserName-info').css("display", "block");
-        $('#updateUserName-info').html("请输入登陆名称！");
-        return false;
-    }
+function validNickNameForUpdate(nickName) {
     if (isNull(nickName) || nickName.trim().length < 1) {
         $('#updateUserName-info').css("display", "block");
         $('#updateUserName-info').html("昵称不能为空！");
-        return false;
-    }
-    if (!validUserName(userName)) {
-        $('#updateUserName-info').css("display", "block");
-        $('#updateUserName-info').html("请输入符合规范的登录名！");
         return false;
     }
     if (!validCN_ENString2_18(nickName)) {

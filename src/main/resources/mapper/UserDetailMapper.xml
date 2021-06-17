@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yoolean.jblog.dao.UserDetailMapper">
+    <resultMap id="UserDetailMap" type="com.yoolean.jblog.entity.UserDetail">
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+    </resultMap>
+    <insert id="insertUserDetail" parameterType="com.yoolean.jblog.entity.UserDetail">
+        insert into user_detail(username, nick_name, email, phone)
+        values (#{username}, #{nickName}, #{email}, #{phone});
+    </insert>
+    <update id="updateUserDetail">
+        update user_detail
+        set nick_name=#{nickName},
+            email=#{email},
+            phone=#{phone}
+        where username = #{username}
+    </update>
+    <select id="selectByUsername" resultMap="UserDetailMap">
+        select username, nick_name, email, phone
+        from user_detail
+        where username = #{username}
+    </select>
+</mapper>

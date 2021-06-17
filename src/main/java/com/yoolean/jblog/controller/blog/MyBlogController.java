@@ -5,6 +5,7 @@ import com.yoolean.jblog.entity.BlogComment;
 import com.yoolean.jblog.entity.BlogLink;
 import com.yoolean.jblog.service.*;
 import com.yoolean.jblog.util.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -16,18 +17,12 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author 13
- * @qq交流群 796794009
- * @email 2449207463@qq.com
- * @link http://13blog.site
- */
 @Controller
 public class MyBlogController {
 
-    //public static String theme = "default";
-    //public static String theme = "yummy-jekyll";
-    public static String theme = "amaze";
+    @Value("${jblog.config.theme}")
+    private  String defaultTheme = "default";
+
     @Resource
     private BlogService blogService;
     @Resource
@@ -41,23 +36,13 @@ public class MyBlogController {
     @Resource
     private CategoryService categoryService;
 
-    /**
-     * 首页
-     *
-     * @return
-     */
     @GetMapping({"/", "/index", "index.html"})
     public String index(Model model) {
-        return this.page(model, 1);
+        return this.getPageByNum(model, 1);
     }
 
-    /**
-     * 首页 分页数据
-     *
-     * @return
-     */
     @GetMapping({"/page/{pageNum}"})
-    public String page(Model model, @PathVariable("pageNum") int pageNum) {
+    public String getPageByNum(Model model, @PathVariable("pageNum") int pageNum) {
         PageResult blogPageResult = blogService.getBlogsForIndexPage(pageNum);
         if (blogPageResult == null) {
             return "error/error_404";
@@ -68,7 +53,7 @@ public class MyBlogController {
         model.addAttribute("hotTags", tagService.getBlogTagCountForIndex());
         model.addAttribute("pageName", "首页");
         model.addAttribute("configurations", configService.getAllConfigs());
-        return "blog/" + theme + "/index";
+        return "blog/" + defaultTheme + "/index";
     }
 
     /**
@@ -82,7 +67,7 @@ public class MyBlogController {
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("pageName", "分类页面");
         model.addAttribute("configurations", configService.getAllConfigs());
-        return "blog/" + theme + "/category";
+        return "blog/" + defaultTheme + "/category";
     }
 
     /**
@@ -99,7 +84,7 @@ public class MyBlogController {
         }
         model.addAttribute("pageName", "详情");
         model.addAttribute("configurations", configService.getAllConfigs());
-        return "blog/" + theme + "/detail";
+        return "blog/" + defaultTheme + "/detail";
     }
 
     /**
@@ -128,7 +113,7 @@ public class MyBlogController {
         model.addAttribute("hotBlogs", blogService.getBlogListForIndexPage(0));
         model.addAttribute("hotTags", tagService.getBlogTagCountForIndex());
         model.addAttribute("configurations", configService.getAllConfigs());
-        return "blog/" + theme + "/list";
+        return "blog/" + defaultTheme + "/list";
     }
 
     /**
@@ -157,7 +142,7 @@ public class MyBlogController {
         model.addAttribute("hotBlogs", blogService.getBlogListForIndexPage(0));
         model.addAttribute("hotTags", tagService.getBlogTagCountForIndex());
         model.addAttribute("configurations", configService.getAllConfigs());
-        return "blog/" + theme + "/list";
+        return "blog/" + defaultTheme + "/list";
     }
 
     /**
@@ -186,7 +171,7 @@ public class MyBlogController {
         model.addAttribute("hotBlogs", blogService.getBlogListForIndexPage(0));
         model.addAttribute("hotTags", tagService.getBlogTagCountForIndex());
         model.addAttribute("configurations", configService.getAllConfigs());
-        return "blog/" + theme + "/list";
+        return "blog/" + defaultTheme + "/list";
     }
 
 
@@ -212,7 +197,7 @@ public class MyBlogController {
             }
         }
         model.addAttribute("configurations", configService.getAllConfigs());
-        return "blog/" + theme + "/link";
+        return "blog/" + defaultTheme + "/link";
     }
 
     /**
@@ -279,7 +264,7 @@ public class MyBlogController {
             model.addAttribute("blogDetailVO", blogDetailVO);
             model.addAttribute("pageName", subUrl);
             model.addAttribute("configurations", configService.getAllConfigs());
-            return "blog/" + theme + "/detail";
+            return "blog/" + defaultTheme + "/detail";
         } else {
             return "error/error_400";
         }
