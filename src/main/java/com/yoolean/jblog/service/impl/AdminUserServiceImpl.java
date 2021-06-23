@@ -5,6 +5,7 @@ import com.yoolean.jblog.entity.UserDetail;
 import com.yoolean.jblog.service.AdminUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,9 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Resource
     private JdbcUserDetailsManager userDetailsManager;
 
+    @Resource
+    private PasswordEncoder passwordEncoder;
+
 
     @Override
     public UserDetail findUserDetail(String username) {
@@ -31,7 +35,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Override
     public void updatePassword(String username, String originalPassword, String newPassword) {
         LOG.info("Update password for user {}", username);
-        userDetailsManager.changePassword(originalPassword, newPassword);
+        userDetailsManager.changePassword(originalPassword, passwordEncoder.encode(newPassword));
     }
 
     @Override

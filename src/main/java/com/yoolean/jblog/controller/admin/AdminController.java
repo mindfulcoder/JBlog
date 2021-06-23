@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import javax.security.auth.Subject;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.Map;
 
 
 @Controller
@@ -62,11 +63,23 @@ public class AdminController {
         return "admin/profile";
     }
 
-    @PostMapping("/profile/password")
+    @GetMapping("/password")
+    public String password(Model model, Principal principal) {
+        UserDetail userDetail = adminUserService.findUserDetail(principal.getName());
+        if (userDetail == null) {
+            return "admin/login";
+        }
+        model.addAttribute("path", "password");
+        model.addAttribute("userDetail", userDetail);
+        return "admin/password";
+    }
+
+    @PostMapping("/password")
     @ResponseBody
-    public String updatePassword(Principal principal, HttpSession session, @RequestParam("oldPassword") String oldPassword,
-                                 @RequestParam("newPassword") String newPassword) {
+    public String updatePassword(Principal principal, HttpSession session, @RequestBody Map<String,String> params) {
         try {
+            String oldPassword=params.get("oldPassword");
+            String newPassword=params.get("newPassword");
             if (StringUtils.isEmpty(oldPassword) || StringUtils.isEmpty(newPassword)) {
                 return "参数不能为空";
             }
@@ -81,7 +94,7 @@ public class AdminController {
 
     @PostMapping("/profile/detail")
     @ResponseBody
-    public String updateDetail( UserDetail userDetail) {
+    public String updateDetail(UserDetail userDetail) {
         try {
             adminUserService.updateUserDetail(userDetail);
             return "success";
